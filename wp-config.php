@@ -15,17 +15,16 @@
  */
 
 // ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for WordPress */
-define('DB_NAME', 'database_name_here');
-
-/** MySQL database username */
-define('DB_USER', 'username_here');
-
-/** MySQL database password */
-define('DB_PASSWORD', 'password_here');
-
-/** MySQL hostname */
-define('DB_HOST', 'localhost');
+if (isset($_SERVER["DATABASE_URL"])) {
+    $db = parse_url($_SERVER["DATABASE_URL"]);
+    define("DB_NAME", trim($db["path"],"/"));
+    define("DB_USER", $db["user"]);
+    define("DB_PASSWORD", $db["pass"]);
+    define("DB_HOST", $db["host"]);
+}
+else {
+    die("Your Heroku DATABASE_URL does not appear to be correctly specified.");
+}
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -42,14 +41,19 @@ define('DB_COLLATE', '');
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         'put your unique phrase here');
-define('SECURE_AUTH_KEY',  'put your unique phrase here');
-define('LOGGED_IN_KEY',    'put your unique phrase here');
-define('NONCE_KEY',        'put your unique phrase here');
-define('AUTH_SALT',        'put your unique phrase here');
-define('SECURE_AUTH_SALT', 'put your unique phrase here');
-define('LOGGED_IN_SALT',   'put your unique phrase here');
-define('NONCE_SALT',       'put your unique phrase here');
+if (isset($_SERVER["WP_AUTH_KEY"])) {
+    define('AUTH_KEY',         $_SERVER["WP_AUTH_KEY"]);
+    define('SECURE_AUTH_KEY',  $_SERVER["WP_SECURE_AUTH_KEY"]);
+    define('LOGGED_IN_KEY',    $_SERVER["WP_LOGGED_IN_KEY"]);
+    define('NONCE_KEY',        $_SERVER["WP_NONCE_KEY"]);
+    define('AUTH_SALT',        $_SERVER["WP_AUTH_SALT"]);
+    define('SECURE_AUTH_SALT', $_SERVER["WP_SECURE_AUTH_SALT"]);
+    define('LOGGED_IN_SALT',   $_SERVER["WP_LOGGED_IN_SALT"]);
+    define('NONCE_SALT',       $_SERVER["WP_NONCE_SALT"]);
+}
+else {
+    die("Your Heroku keys and salts do not appear to be correctly specified.");
+}
 
 /**#@-*/
 
